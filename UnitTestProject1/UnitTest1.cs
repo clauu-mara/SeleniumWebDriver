@@ -110,7 +110,7 @@ namespace UnitTestProject1
 
             //quit browser
             webDriver.Quit();
-
+            Console.WriteLine();
         }
         [TestMethod]
         public void TestMethod5()
