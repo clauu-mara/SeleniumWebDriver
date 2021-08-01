@@ -4,6 +4,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace UnitTestProject1
@@ -30,7 +31,7 @@ namespace UnitTestProject1
             Console.WriteLine("The current URL: " + url);
 
             //click on the logo
-            IWebElement element = webDriver.FindElement(By.CssSelector("#header > div > a"));
+            IWebElement element = webDriver.FindElement(By.CssSelector("header > div >a.logo"));
             element.Click();
 
             //navigate to a different page
@@ -58,7 +59,7 @@ namespace UnitTestProject1
             webDriver.Navigate().GoToUrl("http://qa2.dev.evozon.com/");
 
             //Click on the account link from the header 
-            IWebElement element = webDriver.FindElement(By.CssSelector("#header > div > div.skip-links > div > a"));
+            IWebElement element = webDriver.FindElement(By.CssSelector(".skip-links >div >a .label"));
             element.Click();
 
             //quit browser
@@ -77,7 +78,7 @@ namespace UnitTestProject1
             webDriver.Navigate().GoToUrl("http://qa2.dev.evozon.com/");
 
             //List the number of language options
-            SelectElement select = new SelectElement(webDriver.FindElement(By.CssSelector("#select-language")));
+            SelectElement select = new SelectElement(webDriver.FindElement(By.Id("select-language")));
             IList<IWebElement> languages = select.Options;
             Console.WriteLine(languages.Count);
 
@@ -98,7 +99,7 @@ namespace UnitTestProject1
             webDriver.Navigate().GoToUrl("http://qa2.dev.evozon.com/");
 
             //Clear search field 
-            IWebElement search = webDriver.FindElement(By.CssSelector("#search"));
+            IWebElement search = webDriver.FindElement(By.Id("search"));
             search.Clear();
 
             //Enter “woman” text to field 
@@ -120,16 +121,18 @@ namespace UnitTestProject1
             IWebDriver webDriver = new ChromeDriver();
             webDriver.Navigate().GoToUrl("http://qa2.dev.evozon.com/");
 
-            Thread.Sleep(1500);
+            
             //List the number of new products
-            // SelectElement selectElement = new SelectElement(webDriver.FindElements(By.ClassName("body > div > div.page > div.main-container.col1-layout > div > div > div.std > div.widget.widget-new-products > div.widget-products > ul")));
-            // IList<IWebElement> products = selectElement.Options;
-            // Console.WriteLine("The number of the products is: " + products);
+         
+             IList<IWebElement> newProducts = webDriver.FindElements(By.CssSelector(".widget-products > ul >li"));
+            Console.WriteLine("The number of the products is: " + newProducts.Count);
 
             Thread.Sleep(1500);
             //List all products form the new products list
             Console.WriteLine("The products are: ");
-            //Console.WriteLine(products);
+            foreach (IWebElement product in newProducts)
+                Console.WriteLine(product.Text);
+
 
             //quit browser
             webDriver.Quit();
@@ -145,23 +148,12 @@ namespace UnitTestProject1
 
             Thread.Sleep(1500);
             //Get the navigation headlines 
-            IList<IWebElement> navigation = webDriver.FindElements(By.Id("#header-nav"));
+            IList<IWebElement> navigationHeadlines = webDriver.FindElements(By.CssSelector("#header-nav > #nav > .nav-primary >li"));
+            
 
             //Go to a specified item “Sale”
-            IWebElement sale;
-            SelectElement select;
-            for (int i=0;i<navigation.Count;i++)
-            {
-                if (navigation[i].Equals(webDriver.FindElement(By.Id("#nav > ol > li.level0.nav-5.parent"))))
-                {
-                    select = new SelectElement(navigation[i]);
-                    sale = navigation[i];
-                    sale.Click();
-                }
-            }
-
-           
-
+            navigationHeadlines.First(item => item.Text == "SALE").Click();
+            
             //quit browser
             webDriver.Quit();
 
